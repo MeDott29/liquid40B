@@ -13,7 +13,6 @@ except LookupError as e:
     print(f"Error: {e}. Please download required NLTK resources.")
     exit()
 
-
 openai_api_key = "EMPTY"  # Replace with your actual API key
 openai_api_base = "http://localhost:2242/v1"
 
@@ -31,14 +30,12 @@ def is_grammatically_correct(text):
     # A very basic heuristic: shorter sentences are considered more grammatically correct (this is a simplification!)
     return max(0, 1 - (avg_sentence_length - 15) / 30)  # Scale to 0-1
 
-
 def is_relevant(text, prompt):
     """Rudimentary relevance check (using word overlap)."""
     prompt_words = set(word_tokenize(prompt.lower())) - stop_words
     text_words = set(word_tokenize(text.lower())) - stop_words
     overlap = len(prompt_words.intersection(text_words))
     return overlap / max(len(prompt_words), len(text_words)) if max(len(prompt_words), len(text_words)) > 0 else 0
-
 
 def is_creative_and_engaging(text):
     """Rudimentary creativity and engagement check (using sentence length variation)."""
@@ -50,17 +47,14 @@ def is_creative_and_engaging(text):
     # A very basic heuristic: more variation in sentence length is considered more engaging (this is a simplification!)
     return min(1, std_dev / 5)
 
-
 def is_free_of_errors(text):
     """Rudimentary error check (currently returns 1, needs improvement)."""
     # Placeholder:  This needs a proper spell checker and grammar checker integration.
     return 1
 
-
 def is_consistent_in_style(text, prompt):
     """Rudimentary style consistency check (using similarity score)."""
     return SequenceMatcher(None, prompt.lower(), text.lower()).ratio()
-
 
 def calculate_overall_score(scores):
     """Calculates an overall score based on individual evaluation scores."""
@@ -68,7 +62,6 @@ def calculate_overall_score(scores):
         return sum(scores) / len(scores)
     else:
         return None
-
 
 try:
     completion = client.completions.create(
@@ -126,11 +119,9 @@ try:
     print("Style & Tone Consistency:", style_score)
     print("Overall Score:", overall_score)
 
-
 except OpenAIError as e:
     print(f"OpenAI API Error: {e}")
 except IndexError as e:
     print(f"Error accessing completion  {e}. Check API response format.")
 except Exception as e:
     print(f"An unexpected error occurred: {e}")
-
