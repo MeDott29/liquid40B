@@ -1,4 +1,5 @@
 // story.py
+# story.py
 import os
 import json
 from openai import OpenAI, OpenAIError
