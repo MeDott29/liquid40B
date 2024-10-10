@@ -80,4 +80,39 @@ def generate_and_check_stories(prompt, max_attempts=3):
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
 
+def research_topic(topic):
+    research_topics = []
+    attempts = 0
+
+    while len(research_topics) < 5 and attempts < max_attempts:
+        try:
+            completion = client.completions.create(
+                model="ccore/opt-125-nh",
+                prompt=topic,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                extra_body=extra_body
+            )
+
+            generated_text = completion.choices[0].text.strip()
+            sentences = generated_text.split('.')
+            coherence_score = check_coherence(sentences)
+
+            if coherence_score < coherence_threshold:
+                print("Research topic coherence is low, trying again with a revised prompt...")
+                topic = generated_text  # Use previous output as prompt for the next iteration
+            else:
+                research_topics.append(generated_text)
+
+            attempts += 1
+
+        except OpenAIError as e:
+            print(f"OpenAI API Error: {e}")
+        except IndexError as e:
+            print(f"Error accessing completion  {e}. Check API response format.")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+
+    return research_topics
+
 generate_and_check_stories(prompt)
