@@ -37,17 +37,16 @@ def generate_story(prompt):
     return generated_text
 
 def check_coherence(story):
-    sentences = story.split('.')
-    if len(sentences) > 1:
+    if len(story) > 1:
         coherence_score = 1
-        for j in range(len(sentences) - 1):
-            words1 = set(sentences[j].lower().split())
-            words2 = set(sentences[j+1].lower().split())
+        for j in range(len(story) - 1):
+            words1 = set(story[j].lower().split())
+            words2 = set(story[j+1].lower().split())
             if len(words1.intersection(words2)) == 0:
                 coherence_score -= 0.2
         return coherence_score
     else:
-        return 0
+        return 0.5  # Assign a default coherence score for single-sentence stories
 
 def generate_and_check_stories(prompt, max_attempts=3):
     for i in range(max_attempts):
@@ -57,7 +56,7 @@ def generate_and_check_stories(prompt, max_attempts=3):
             print(story)
 
             # Check coherence and adjust prompt if needed (you can add more sophisticated logic here)
-            coherence = check_coherence(story)
+            coherence = check_coherence(story.split('.'))
             print(f"Coherence Score: {coherence}")
             if i == 1:
                 prompt = story  # Use previous output as prompt for the middle
