@@ -40,28 +40,31 @@ def check_coherence(story):
     else:
         return 0
 
-for i in range(3):
-    try:
-        story = generate_story(prompt)
-        print(f"Story {i+1}:")
-        print(story)
+def generate_and_check_stories(prompt, max_attempts=3):
+    for i in range(max_attempts):
+        try:
+            story = generate_story(prompt)
+            print(f"Story {i+1}:")
+            print(story)
 
-        # Check coherence and adjust prompt if needed (you can add more sophisticated logic here)
-        coherence = check_coherence(story)
-        print(f"Coherence Score: {coherence}")
-        if coherence < 0.8:
-            print("Story coherence is low, trying again with a revised prompt...")
-            #  Consider revising the prompt based on the generated story 
-            #  for the next iteration
+            # Check coherence and adjust prompt if needed (you can add more sophisticated logic here)
+            coherence = check_coherence(story)
+            print(f"Coherence Score: {coherence}")
+            if coherence < 0.8:
+                print("Story coherence is low, trying again with a revised prompt...")
+                #  Consider revising the prompt based on the generated story 
+                #  for the next iteration
         
-        if i == 1:
-            prompt = story  # Use previous output as prompt for the middle
-        elif i == 2:
-            prompt = story  # Use previous output as prompt for the end
+            if i == 1:
+                prompt = story  # Use previous output as prompt for the middle
+            elif i == 2:
+                prompt = story  # Use previous output as prompt for the end
 
-    except OpenAIError as e:
-        print(f"OpenAI API Error: {e}")
-    except IndexError as e:
-        print(f"Error accessing completion  {e}. Check API response format.")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        except OpenAIError as e:
+            print(f"OpenAI API Error: {e}")
+        except IndexError as e:
+            print(f"Error accessing completion  {e}. Check API response format.")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+
+generate_and_check_stories(prompt)
