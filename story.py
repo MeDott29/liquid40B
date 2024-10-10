@@ -36,6 +36,9 @@ def generate_story(prompt):
         sentences = generated_text.split('.')
         coherence_score = check_coherence(sentences)
 
+        print(f"Generated Text: {generated_text}")
+        print(f"Coherence Score: {coherence_score}")
+
         if coherence_score < coherence_threshold:
             print("Story coherence is low, trying again with a revised prompt...")
             prompt = generated_text  # Use previous output as prompt for the next iteration
