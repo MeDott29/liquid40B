@@ -10,6 +10,40 @@ client = OpenAI(
     base_url=openai_api_base,
 )
 
+def is_grammatically_correct(text):
+    """Checks grammatical correctness (placeholder)."""
+    # Implement grammatical correctness check here using a library like spaCy or NLTK
+    return None  # Replace with a score or boolean value
+
+def is_relevant(text, prompt):
+    """Checks relevance to the prompt (placeholder)."""
+    # Implement relevance check here using techniques like cosine similarity
+    return None  # Replace with a score or boolean value
+
+def is_creative_and_engaging(text):
+    """Checks creativity and engagement (placeholder)."""
+    # Implement creativity and engagement check here (challenging task)
+    return None  # Replace with a score or boolean value
+
+def is_free_of_errors(text):
+    """Checks for errors and typos (placeholder)."""
+    # Implement error and typo check here (e.g., using spell checking libraries)
+    return None  # Replace with a score or boolean value
+
+def is_consistent_in_style(text, prompt):
+    """Checks consistency with the prompt's style and tone (placeholder)."""
+    # Implement style and tone consistency check here (challenging task)
+    return None  # Replace with a score or boolean value
+
+def calculate_overall_score(scores):
+    """Calculates an overall score based on individual evaluation scores."""
+    # Implement a scoring mechanism (e.g., average, weighted average)
+    if all(s is not None for s in scores):
+        return sum(scores) / len(scores)
+    else:
+        return None
+
+
 try:
     completion = client.completions.create(
         model="ccore/opt-125-nh",
@@ -21,9 +55,7 @@ try:
 
     print("Completion result:", completion)
 
-    # Analyze the completion result
     generated_text = completion.choices[0].text.strip()
-    #Use the correct token counting method provided by the API response.
     completion_tokens = completion.usage.completion_tokens
     prompt_tokens = completion.usage.prompt_tokens
     total_tokens = completion.usage.total_tokens
@@ -32,28 +64,41 @@ try:
     print("Prompt tokens:", prompt_tokens)
     print("Total tokens:", total_tokens)
 
-    # Access temperature from the request parameters, not the response.  It's not returned.
-    temperature = 1.1 #This should match the value set in the request.  Could be retrieved from a variable if set dynamically.
-    min_p = 0.1 #This is also set in the request, not returned.
+    temperature = 1.1
+    min_p = 0.1
 
     print("Temperature:", temperature)
     print("min_p:", min_p)
 
     print("Generated text:", generated_text)
 
-    # Basic coherence check (can be significantly improved)
     sentences = generated_text.split('.')
     if len(sentences) > 1:
-        coherence_score = 1  # Assume coherent initially
+        coherence_score = 1
         for i in range(len(sentences) - 1):
-            # Simple check:  Do sentences share any words?
             words1 = set(sentences[i].lower().split())
             words2 = set(sentences[i+1].lower().split())
             if len(words1.intersection(words2)) == 0:
-                coherence_score -= 0.2  # Reduce score if no word overlap
+                coherence_score -= 0.2
         print("Basic Coherence Score (0-1):", coherence_score)
     else:
         print("Too few sentences for coherence check.")
+
+    # Perform evaluations
+    grammatical_score = is_grammatically_correct(generated_text)
+    relevance_score = is_relevant(generated_text, "Once upon a time")
+    creativity_score = is_creative_and_engaging(generated_text)
+    error_score = is_free_of_errors(generated_text)
+    style_score = is_consistent_in_style(generated_text, "Once upon a time")
+
+    overall_score = calculate_overall_score([grammatical_score, relevance_score, creativity_score, error_score, style_score])
+
+    print("Grammatical Correctness:", grammatical_score)
+    print("Relevance:", relevance_score)
+    print("Creativity & Engagement:", creativity_score)
+    print("Errors & Typos:", error_score)
+    print("Style & Tone Consistency:", style_score)
+    print("Overall Score:", overall_score)
 
 
 except OpenAIError as e:
