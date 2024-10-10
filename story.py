@@ -14,10 +14,11 @@ prompt = "Once upon a time"
 temperature = 1.1
 max_tokens = 50
 extra_body = {"min_p": 0.1}
+coherence_threshold = 0.8
+max_attempts = 5
 
 def generate_story(prompt):
-    coherence_score = 0
-    while coherence_score < 0.8:
+    for _ in range(max_attempts):
         completion = client.completions.create(
             model="ccore/opt-125-nh",
             prompt=prompt,
@@ -30,11 +31,13 @@ def generate_story(prompt):
         sentences = generated_text.split('.')
         coherence_score = check_coherence(sentences)
 
-        if coherence_score < 0.8:
+        if coherence_score >= coherence_threshold:
+            return generated_text
+        else:
             print("Story coherence is low, trying again with a revised prompt...")
             prompt = generated_text  # Use previous output as prompt for the next iteration
 
-    return generated_text
+    return "Failed to generate a coherent story"
 
 def check_coherence(story):
     if len(story) > 1:
