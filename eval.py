@@ -1,6 +1,18 @@
 import os
 import json
 from openai import OpenAI, OpenAIError
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from difflib import SequenceMatcher
+
+try:
+    import nltk
+    nltk.download('punkt')
+    nltk.download('stopwords')
+except LookupError as e:
+    print(f"Error: {e}. Please download required NLTK resources.")
+    exit()
+
 
 openai_api_key = "EMPTY"  # Replace with your actual API key
 openai_api_base = "http://localhost:2242/v1"
@@ -10,34 +22,48 @@ client = OpenAI(
     base_url=openai_api_base,
 )
 
+stop_words = set(stopwords.words('english'))
+
 def is_grammatically_correct(text):
-    """Checks grammatical correctness (placeholder)."""
-    # Implement grammatical correctness check here using a library like spaCy or NLTK
-    return None  # Replace with a score or boolean value
+    """Rudimentary grammatical correctness check (using simple sentence length)."""
+    sentences = text.split('.')
+    avg_sentence_length = sum(len(s.split()) for s in sentences) / len(sentences) if sentences else 0
+    # A very basic heuristic: shorter sentences are considered more grammatically correct (this is a simplification!)
+    return max(0, 1 - (avg_sentence_length - 15) / 30)  # Scale to 0-1
+
 
 def is_relevant(text, prompt):
-    """Checks relevance to the prompt (placeholder)."""
-    # Implement relevance check here using techniques like cosine similarity
-    return None  # Replace with a score or boolean value
+    """Rudimentary relevance check (using word overlap)."""
+    prompt_words = set(word_tokenize(prompt.lower())) - stop_words
+    text_words = set(word_tokenize(text.lower())) - stop_words
+    overlap = len(prompt_words.intersection(text_words))
+    return overlap / max(len(prompt_words), len(text_words)) if max(len(prompt_words), len(text_words)) > 0 else 0
+
 
 def is_creative_and_engaging(text):
-    """Checks creativity and engagement (placeholder)."""
-    # Implement creativity and engagement check here (challenging task)
-    return None  # Replace with a score or boolean value
+    """Rudimentary creativity and engagement check (using sentence length variation)."""
+    sentences = text.split('.')
+    sentence_lengths = [len(s.split()) for s in sentences]
+    if not sentence_lengths:
+        return 0
+    std_dev = (sum([(x - sum(sentence_lengths) / len(sentence_lengths))**2 for x in sentence_lengths]) / len(sentence_lengths))**0.5
+    # A very basic heuristic: more variation in sentence length is considered more engaging (this is a simplification!)
+    return min(1, std_dev / 5)
+
 
 def is_free_of_errors(text):
-    """Checks for errors and typos (placeholder)."""
-    # Implement error and typo check here (e.g., using spell checking libraries)
-    return None  # Replace with a score or boolean value
+    """Rudimentary error check (currently returns 1, needs improvement)."""
+    # Placeholder:  This needs a proper spell checker and grammar checker integration.
+    return 1
+
 
 def is_consistent_in_style(text, prompt):
-    """Checks consistency with the prompt's style and tone (placeholder)."""
-    # Implement style and tone consistency check here (challenging task)
-    return None  # Replace with a score or boolean value
+    """Rudimentary style consistency check (using similarity score)."""
+    return SequenceMatcher(None, prompt.lower(), text.lower()).ratio()
+
 
 def calculate_overall_score(scores):
     """Calculates an overall score based on individual evaluation scores."""
-    # Implement a scoring mechanism (e.g., average, weighted average)
     if all(s is not None for s in scores):
         return sum(scores) / len(scores)
     else:
