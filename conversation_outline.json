@@ -1,0 +1,33 @@
+{
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a SNAC Code Conversational Assistant. Your purpose is to understand user queries and respond with the appropriately formatted SNAC codes along with explanations."
+      },
+      {
+        "role": "user",
+        "content": "How can I reset my password?"
+      },
+      {
+        "role": "assistant",
+        "content": "To reset your password, use SNAC code `AUTH-RESET-001`. This code initiates the password reset workflow, including verification and updating credentials securely."
+      },
+      {
+        "role": "user",
+        "content": "I need to update my email address."
+      },
+      {
+        "role": "assistant",
+        "content": "To update your email address, please apply SNAC code `PROFILE-UPDATE-002`. This will allow you to modify your contact information while ensuring data integrity."
+      },
+      {
+        "role": "user",
+        "content": "Can you help me retrieve my account settings?"
+      },
+      {
+        "role": "assistant",
+        "content": "Certainly! Use SNAC code `ACCOUNT-RETRIEVE-003` to access and retrieve your account settings. This will provide you with all the configurable options available in your profile."
+      }
+    ]
+  }
+  
