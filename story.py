@@ -20,7 +20,10 @@ max_sentences = 5
 
 def generate_story(prompt):
     story = ""
-    for _ in range(max_sentences):
+    coherence_score = 0
+    attempts = 0
+
+    while coherence_score < coherence_threshold and attempts < max_attempts:
         completion = client.completions.create(
             model="ccore/opt-125-nh",
             prompt=prompt,
@@ -33,13 +36,13 @@ def generate_story(prompt):
         sentences = generated_text.split('.')
         coherence_score = check_coherence(sentences)
 
-        if coherence_score >= coherence_threshold:
-            story += generated_text
-            break
-        else:
+        if coherence_score < coherence_threshold:
             print("Story coherence is low, trying again with a revised prompt...")
             prompt = generated_text  # Use previous output as prompt for the next iteration
+        else:
             story += generated_text
+
+        attempts += 1
 
     return story
 
