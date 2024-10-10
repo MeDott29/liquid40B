@@ -27,8 +27,17 @@ for i in range(3):
 
         generated_text = completion.choices[0].text.strip()
 
-        print(f"Story {i+1}:")
-        print(generated_text)
+        if i == 0:
+            print(f"Beginning of the story {i+1}:")
+            print(generated_text)
+        elif i == 1:
+            prompt = generated_text  # Use previous output as prompt for the middle
+            print(f"Middle of the story {i+1}:")
+            print(generated_text)
+        else:
+            prompt = generated_text  # Use previous output as prompt for the end
+            print(f"End of the story {i+1}:")
+            print(generated_text)
 
     except OpenAIError as e:
         print(f"OpenAI API Error: {e}")
