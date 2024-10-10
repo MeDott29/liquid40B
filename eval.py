@@ -15,7 +15,7 @@ try:
         model="ccore/opt-125-nh",
         prompt="Once upon a time",
         temperature=1.1,
-        max_tokens=50, #Added to limit response length for testing
+        max_tokens=50,
         extra_body={"min_p": 0.1}
     )
 
@@ -23,16 +23,17 @@ try:
 
     # Analyze the completion result
     generated_text = completion.choices[0].text.strip()
-    completion_tokens = len(generated_text.split())
-    prompt_tokens = len("Once upon a time".split())
-    total_tokens = completion_tokens + prompt_tokens
+    #Use the correct token counting method provided by the API response.
+    completion_tokens = completion.usage.completion_tokens
+    prompt_tokens = completion.usage.prompt_tokens
+    total_tokens = completion.usage.total_tokens
 
     print("Completion tokens:", completion_tokens)
     print("Prompt tokens:", prompt_tokens)
     print("Total tokens:", total_tokens)
 
-    # Check the temperature and extra_body parameters
-    temperature = completion.temperature
+    # Access temperature from the request parameters, not the response.
+    temperature = 1.1 #This should match the value set in the request.  Could be retrieved from a variable if set dynamically.
     min_p = completion.extra_body["min_p"]
 
     print("Temperature:", temperature)
