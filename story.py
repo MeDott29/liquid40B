@@ -1,3 +1,4 @@
+// story.py
 import os
 import json
 from openai import OpenAI, OpenAIError
@@ -14,8 +15,8 @@ prompt = "Once upon a time"
 temperature = 1.1
 max_tokens = 50
 extra_body = {"min_p": 0.1}
-coherence_threshold = 0.95  # Increased coherence threshold
-max_attempts = 5
+coherence_threshold = 0.98  # Increased coherence threshold
+max_attempts = 10  # Increased number of attempts
 max_sentences = 5
 
 def generate_story(prompt):
