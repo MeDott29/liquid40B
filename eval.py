@@ -64,60 +64,61 @@ def calculate_overall_score(scores):
         return None
 
 try:
-    completion = client.completions.create(
-        model="ccore/opt-125-nh",
-        prompt="Once upon a time",
-        temperature=1.1,
-        max_tokens=50,
-        extra_body={"min_p": 0.1}
-    )
+    for i in range(5):
+        completion = client.completions.create(
+            model="ccore/opt-125-nh",
+            prompt="Once upon a time",
+            temperature=1.1,
+            max_tokens=50,
+            extra_body={"min_p": 0.1}
+        )
 
-    print("Completion result:", completion)
+        print(f"Completion result {i+1}:", completion)
 
-    generated_text = completion.choices[0].text.strip()
-    completion_tokens = completion.usage.completion_tokens
-    prompt_tokens = completion.usage.prompt_tokens
-    total_tokens = completion.usage.total_tokens
+        generated_text = completion.choices[0].text.strip()
+        completion_tokens = completion.usage.completion_tokens
+        prompt_tokens = completion.usage.prompt_tokens
+        total_tokens = completion.usage.total_tokens
 
-    print("Completion tokens:", completion_tokens)
-    print("Prompt tokens:", prompt_tokens)
-    print("Total tokens:", total_tokens)
+        print(f"Completion tokens {i+1}:", completion_tokens)
+        print(f"Prompt tokens {i+1}:", prompt_tokens)
+        print(f"Total tokens {i+1}:", total_tokens)
 
-    temperature = 1.1
-    min_p = 0.1
+        temperature = 1.1
+        min_p = 0.1
 
-    print("Temperature:", temperature)
-    print("min_p:", min_p)
+        print(f"Temperature {i+1}:", temperature)
+        print(f"min_p {i+1}:", min_p)
 
-    print("Generated text:", generated_text)
+        print(f"Generated text {i+1}:", generated_text)
 
-    sentences = generated_text.split('.')
-    if len(sentences) > 1:
-        coherence_score = 1
-        for i in range(len(sentences) - 1):
-            words1 = set(sentences[i].lower().split())
-            words2 = set(sentences[i+1].lower().split())
-            if len(words1.intersection(words2)) == 0:
-                coherence_score -= 0.2
-        print("Basic Coherence Score (0-1):", coherence_score)
-    else:
-        print("Too few sentences for coherence check.")
+        sentences = generated_text.split('.')
+        if len(sentences) > 1:
+            coherence_score = 1
+            for j in range(len(sentences) - 1):
+                words1 = set(sentences[j].lower().split())
+                words2 = set(sentences[j+1].lower().split())
+                if len(words1.intersection(words2)) == 0:
+                    coherence_score -= 0.2
+            print(f"Basic Coherence Score (0-1) {i+1}:", coherence_score)
+        else:
+            print(f"Too few sentences for coherence check {i+1}.")
 
-    # Perform evaluations
-    grammatical_score = is_grammatically_correct(generated_text)
-    relevance_score = is_relevant(generated_text, "Once upon a time")
-    creativity_score = is_creative_and_engaging(generated_text)
-    error_score = is_free_of_errors(generated_text)
-    style_score = is_consistent_in_style(generated_text, "Once upon a time")
+        # Perform evaluations
+        grammatical_score = is_grammatically_correct(generated_text)
+        relevance_score = is_relevant(generated_text, "Once upon a time")
+        creativity_score = is_creative_and_engaging(generated_text)
+        error_score = is_free_of_errors(generated_text)
+        style_score = is_consistent_in_style(generated_text, "Once upon a time")
 
-    overall_score = calculate_overall_score([grammatical_score, relevance_score, creativity_score, error_score, style_score])
+        overall_score = calculate_overall_score([grammatical_score, relevance_score, creativity_score, error_score, style_score])
 
-    print("Grammatical Correctness:", grammatical_score)
-    print("Relevance:", relevance_score)
-    print("Creativity & Engagement:", creativity_score)
-    print("Errors & Typos:", error_score)
-    print("Style & Tone Consistency:", style_score)
-    print("Overall Score:", overall_score)
+        print(f"Grammatical Correctness {i+1}:", grammatical_score)
+        print(f"Relevance {i+1}:", relevance_score)
+        print(f"Creativity & Engagement {i+1}:", creativity_score)
+        print(f"Errors & Typos {i+1}:", error_score)
+        print(f"Style & Tone Consistency {i+1}:", style_score)
+        print(f"Overall Score {i+1}:", overall_score)
 
 except OpenAIError as e:
     print(f"OpenAI API Error: {e}")
