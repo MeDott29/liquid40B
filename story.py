@@ -14,7 +14,7 @@ prompt = "Once upon a time"
 temperature = 1.1
 max_tokens = 50
 extra_body = {"min_p": 0.1}
-coherence_threshold = 0.8
+coherence_threshold = 0.9  # Increased coherence threshold
 max_attempts = 5
 max_sentences = 5
 
