@@ -32,9 +32,9 @@ try:
     print("Prompt tokens:", prompt_tokens)
     print("Total tokens:", total_tokens)
 
-    # Access temperature from the request parameters, not the response.
+    # Access temperature from the request parameters, not the response.  It's not returned.
     temperature = 1.1 #This should match the value set in the request.  Could be retrieved from a variable if set dynamically.
-    min_p = completion.extra_body["min_p"]
+    min_p = 0.1 #This is also set in the request, not returned.
 
     print("Temperature:", temperature)
     print("min_p:", min_p)
